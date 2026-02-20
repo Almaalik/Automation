@@ -32,5 +32,30 @@ final class AutomationTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    
+    
+    func testInitialValueIsZero() {
+        let vm = CounterViewModel()
+        XCTAssertEqual(vm.count, 0)
+    }
+    
+    func testIncrement() {
+        let vm = CounterViewModel()
+        vm.increment()
+        XCTAssertEqual(vm.count, 1)
+    }
+    
+    func testDecrement() {
+        let vm = CounterViewModel()
+        vm.decrement()
+        XCTAssertEqual(vm.count, -1)
+    }
+    
+    func testReset() {
+        let vm = CounterViewModel()
+        vm.increment()
+        vm.reset()
+        XCTAssertEqual(vm.count, 0)
+    }
 
 }

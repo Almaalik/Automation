@@ -38,4 +38,15 @@ final class AutomationUITests: XCTestCase {
             XCUIApplication().launch()
         }
     }
+    
+    func testIncrementButtonIncreasesCount() {
+            let app = XCUIApplication()
+            app.launch()
+            
+            let incrementButton = app.buttons["+"]
+
+            incrementButton.tap()
+            
+            XCTAssertTrue(app.staticTexts["Count: 1"].exists)
+        }
 }

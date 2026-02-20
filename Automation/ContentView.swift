@@ -7,17 +7,36 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct ContentView: View {
+    
+    @StateObject private var viewModel = CounterViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 20) {
+            
+            Text("Count: \(viewModel.count)")
+                .font(.largeTitle)
+            
+            HStack {
+                Button("-") {
+                    viewModel.decrement()
+                }
+                
+                Button("+") {
+                    viewModel.increment()
+                }
+            }
+            
+            Button("Reset") {
+                viewModel.reset()
+            }
         }
         .padding()
     }
 }
+
 
 #Preview {
     ContentView()
