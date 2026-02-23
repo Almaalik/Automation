@@ -37,6 +37,7 @@ final class AutomationTests: XCTestCase {
     func testInitialValueIsZero() {
         let vm = CounterViewModel()
         XCTAssertEqual(vm.count, 0)
+
     }
     
     func testIncrement() {
