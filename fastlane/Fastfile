@@ -36,6 +36,7 @@ platform :ios do
 
   desc "Build app"
   lane :build do
+
   build_app(
     scheme: "Automation",
     clean: true,
@@ -44,6 +45,7 @@ platform :ios do
     skip_package_pkg: true
   )
 end
+
 
 
 end
