@@ -36,10 +36,13 @@ platform :ios do
 
   desc "Build app"
   lane :build do
-    build_app(
-      scheme: "Automation",
-	clean: true
-    )
+
+   build_app(
+  scheme: "Automation",
+  clean: true,
+  skip_codesigning: true
+)
+
   end
 
 end
