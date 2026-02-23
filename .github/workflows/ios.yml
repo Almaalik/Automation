@@ -1,27 +1,80 @@
-name: iOS CI
+name: iOS CI/CD
 
 on:
+  pull_request:
+    branches: [ main ]
+
   push:
     branches: [ main ]
-  pull_request:
+
+    tags:
+      - 'v*'   # 🔥 triggers release pipeline
 
 jobs:
+
+  # ===============================
+  # 🧪 TEST JOB (Runs on PR + Main)
+  # ===============================
   test:
-    runs-on: macos-15   # important for Xcode 16
+    runs-on: macos-15
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Install Bundler
-        run: gem install bundler
+      - name: Cache Swift Packages & DerivedData
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.swiftpm
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
 
       - name: Install Gems
         run: bundle install
 
-      - name: Run Fastlane
+      - name: Run Tests
         run: bundle exec fastlane test
 
 
+  # ===============================
+  # 🏗 BUILD JOB (Only on main)
+  # ===============================
+  build:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install Gems
+        run: bundle install
+
+      - name: Build App
+        run: bundle exec fastlane build
+
+      # 🔥 Upload IPA artifact
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: ./fastlane/*.ipa
