@@ -28,14 +28,17 @@ platform :ios do
   lane :test do
     run_tests(
       scheme: "Automation",
-      devices: ["iPhone 16"]
+	clean: true,
+    code_coverage: true
+     # devices: ["iPhone 16"]
     )
   end
 
   desc "Build app"
   lane :build do
     build_app(
-      scheme: "Automation"
+      scheme: "Automation",
+	clean: true
     )
   end
 
